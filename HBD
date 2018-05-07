@@ -8,10 +8,10 @@
   <meta property="og:title" content="Abhi Inc." />
   <meta property="og:description" content="Future web development" />
   <meta property="og:image" content="https://lh3.googleusercontent.com/1FuDmirxpYc6vuJlqAyB920brfH6l6vLrmxX22BxbOIPV1IYwgIxJsOj2IQZy8glTRTOUWHfJU4rIfR9UQ=s1600" />
-  <meta property=”og:http://abhiinc.tk/” content=”http://abhiinc.tk/” />
+  <meta property=”og:http://abhiinc.co.nf/” content=”http://abhiinc.co.nf/” />
   
 <h2><center>Developed by: Abhishek Mehta</center></h2>
-<h3><center>Check out my website :<a href="http://www.abhiinc.tk">Abhi Inc</a> </center></h3>
+<h3><center>Check out my website :<a href="http://www.abhiinc.co.nf">Abhi Inc</a> </center></h3>
 </head>
 
 
@@ -32,7 +32,7 @@
       var l = document.location + "";
       l = l.replace(/%20/g, " ");
       var index = l.indexOf('?t=');
-      if (index == -1) document.location = l + "?t=HaPpy B!rThD@Y  An!KeT";
+      if (index == -1) document.location = l + "?t=HaPpy B!rThD@Y  Irfan";
       var pixels = new Array();
       var canv = $('canv');
       var ctx = canv.getContext('2d');
