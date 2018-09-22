@@ -1,0 +1,236 @@
+     * {
+  font-family: Futura, "Trebuchet MS", Arial, sans-serif,Sofia;
+}
+
+html, body {
+  height: 100%;
+  margin: 0;
+}
+
+#content {
+  margin-top: 80px;
+  color: white;
+}
+
+.navbar-inner li {
+  line-height: 40px;
+  letter-spacing: 2px;
+}
+
+.nav-link1 {
+  border-top: 4px solid dodgerblue;
+  transition: border-top .3s;
+}
+.nav-link1:hover {
+  border-top: 4px solid  hotpink;
+}
+
+.nav-link2 {
+  border-top: 4px solid yellow;
+  transition: border-top .3s;
+}
+.nav-link2:hover {
+  border-top: 4px solid violet;
+}
+.nav-link3 {
+  border-top: 4px solid tomato ;
+  transition: border-top .3s;
+}
+.nav-link3:hover {
+  border-top: 4px solid  darkorchid;
+}
+
+.nav-link4 {
+  border-top: 4px solid greenyellow;
+  transition: border-top .3s;
+}
+.nav-link4:hover {
+  border-top: 4px solid  gold ;
+}
+
+.nav-link5 {
+  border-top: 4px solid hotpink;
+  transition: border-top .3s;
+}
+.nav-link5:hover {
+  border-top: 4px solid  blue;
+}
+
+
+.dropdown-menu li > a:hover, .dropdown-menu li > a:focus, .dropdown-submenu:hover > a {
+  background-image: none;
+  background-color: dodgerblue;
+}
+
+.brand {
+  letter-spacing: 4px;
+  border-top: 4px solid white;
+  transition: border-top .3s;
+}
+.brand:hover {
+  border-top: 4px solid dodgerblue;
+}
+.brand:hover {
+  border-top: 4px solid dodgerblue;
+}
+
+.header {
+  background-color: rgba(255, 255, 255, 0.95);
+  /* remove the gradient */
+  background-image: none !important;
+  border-bottom: 2px solid dodgerblue !important;
+  line-height: 40px !important;
+  box-shadow: 0 12px 6px -6px rgba(0, 0, 0, 0.2) !important;
+}
+
+.dropdown-menu::before,
+.dropdown-menu::after {
+  border: none;
+  
+}
+
+.dropdown-menu {
+  border-radius: 3%;
+  
+  margin-top: -10px;
+  margin-right: -60% !important;
+}
+
+
+
+.parallax1 {
+    /* The image used */
+    background-image: url(../img/3.jpg);
+
+    /* Set a specific height */
+    height: 700px; 
+
+    /* Create the parallax scrolling effect */
+    background-attachment: fixed;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: 50% 50%;
+}
+
+.parallax2 {
+    /* The image used */
+    background-image: url(../img/5.jpg);
+    
+    /* Set a specific height */
+    height: 700px; 
+
+    /* Create the parallax scrolling effect */
+    background-attachment: fixed;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: 50% 50%;
+}
+
+
+.parallax3 {
+    /* The image used */
+    background-image: url(../img/6.jpg);
+
+    /* Set a specific height */
+    height: auto; 
+
+    /* Create the parallax scrolling effect */
+    background-attachment: fixed;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: 50% 50%;
+}
+
+
+
+.lines {
+  max-width: 800px;
+  width: 100%;
+  opacity: 0;
+  color: indigo;
+}
+.lines span {
+  line-height: 1.3em;
+  display: inline-block;
+  opacity: 0;
+  transition: transform .3s, opacity 1s;
+}
+.lines span.default {
+  transform: translateY(0px) !important;
+  opacity: 1;
+}
+
+.is-visible {
+  opacity: 1;
+}
+
+
+  .sign {
+  min-height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+.sign__word {
+  font-size: 30px;
+  text-align: center;
+  line-height: 1.2;
+  color: #c6e2ff;
+  -webkit-animation: neon .08s ease-in-out infinite alternate;
+          animation: neon .08s ease-in-out infinite alternate;
+}
+
+/*-- Animation Keyframes --*/
+@-webkit-keyframes neon {
+  from {
+    text-shadow: 0 0 6px rgba(202, 228, 225, 0.92), 0 0 30px rgba(202, 228, 225, 0.34), 0 0 12px rgba(30, 132, 242, 0.52), 0 0 21px rgba(30, 132, 242, 0.92), 0 0 34px rgba(30, 132, 242, 0.78), 0 0 54px rgba(30, 132, 242, 0.92);
+  }
+  to {
+    text-shadow: 0 0 6px rgba(202, 228, 225, 0.98), 0 0 30px rgba(202, 228, 225, 0.42), 0 0 12px rgba(30, 132, 242, 0.58), 0 0 22px rgba(30, 132, 242, 0.84), 0 0 38px rgba(30, 132, 242, 0.88), 0 0 60px #1e84f2;
+  }
+}
+@keyframes neon {
+  from {
+    text-shadow: 0 0 6px rgba(202, 228, 225, 0.92), 0 0 30px rgba(202, 228, 225, 0.34), 0 0 12px rgba(30, 132, 242, 0.52), 0 0 21px rgba(30, 132, 242, 0.92), 0 0 34px rgba(30, 132, 242, 0.78), 0 0 54px rgba(30, 132, 242, 0.92);
+  }
+  to {
+    text-shadow: 0 0 6px rgba(202, 228, 225, 0.98), 0 0 30px rgba(202, 228, 225, 0.42), 0 0 12px rgba(30, 132, 242, 0.58), 0 0 22px rgba(30, 132, 242, 0.84), 0 0 38px rgba(30, 132, 242, 0.88), 0 0 60px #1e84f2;
+  }
+}
+
+
+.gallery-content {
+  position: relative;
+  left: 0;
+  right: 0;
+  margin-right: auto;
+  margin-left: auto;
+  display: flex;
+  max-width: 1200px;
+  width: 94%;
+}
+.gallery-content__item {
+  width: 30%;
+}
+.gallery-content__item:nth-child(2) {
+  width: 70%;
+  display: flex;
+  flex-wrap: wrap;
+}
+.gallery-content__small {
+  width: 50%;
+  outline: 10px solid #fff;
+}
+.gallery-content__large {
+  height: 100%;
+}
+
+img {
+  max-width: 100%;
+  display: block;
+}
+
