@@ -224,7 +224,7 @@ body {
 h1 {
   text-align: center;
   
-  font-family: Arvo, serif;
+  font-family: Monotype Corsiva, serif;
   font-size: xx-large;
   background: url(https://download.unsplash.com/photo-1433840496881-cbd845929862) no-repeat;
   background-size: cover;
@@ -249,7 +249,7 @@ font-family: Arvo, serif;
 /* Social Icons */
 /* Social Icons */
 #social_side_links {
-	position: fixed;
+position: fixed;
   top: 150px;
   left: 0;
   padding: 0;
@@ -270,4 +270,32 @@ font-family: Arvo, serif;
 }
 
 #social_side_links li a:hover img {background: rgba(0, 0, 0, .2);}
+/******************************************************************/
+/*Credits*/
+
+#credits {
+position: fixed;
+  top: 250px;
+  right: 0;
+  padding: 0;
+  list-style: none;
+  z-index: 99;
+}
+
+#credits li a {display: block;}
+
+#credits li a img {
+	display: block;
+	max-width:40px;
+  padding: 10px;
+  -webkit-transition:  background .2s ease-in-out;
+  -moz-transition:  background .2s ease-in-out;
+  -o-transition:  background .2s ease-in-out;
+  transition:  background .2s ease-in-out;
+}
+
+#credits li a:hover img {background: rgba(0, 0, 0, .2);}
+
+
+
 
