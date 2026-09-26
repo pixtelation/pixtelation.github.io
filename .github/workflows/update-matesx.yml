@@ -3,7 +3,8 @@ name: Update Matesx Gallery
 on:
   push:
     paths:
-      - 'matesx/media/**'
+      - 'matesx/**'
+  workflow_dispatch:
 
 permissions:
   contents: write
@@ -14,16 +15,47 @@ jobs:
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v4
+        with:
+          # CRITICAL: fetch-depth: 0 downloads your full Git history so we can read true upload dates
+          fetch-depth: 0 
 
-      - name: Generate files.json
+      - name: Generate files.json (Newest First)
         run: |
           cd matesx
-          python -c "import os, json; print(json.dumps([f for f in os.listdir('media') if os.path.isfile(os.path.join('media', f)) and not f.startswith('.')]) if os.path.exists('media') else '[]')" > files.json
+          python -c "
+          import os, json, subprocess
+
+          d = 'media' if os.path.exists('media') else 'Media'
+          
+          # Check if folder exists
+          if not os.path.exists(d):
+              open('files.json', 'w').write('[]')
+              exit()
+
+          # Get all files
+          files = [f for f in os.listdir(d) if os.path.isfile(os.path.join(d, f)) and not f.startswith('.')]
+
+          # Function to extract the exact Git commit timestamp for a file
+          def get_upload_time(filename):
+              filepath = os.path.join(d, filename)
+              try:
+                  cmd = ['git', 'log', '-1', '--format=%ct', '--', filepath]
+                  result = subprocess.check_output(cmd).decode('utf-8').strip()
+                  return int(result) if result else 0
+              except:
+                  return 0
+
+          # Sort the files using the Git timestamp (reverse=True means newest at the top)
+          files.sort(key=get_upload_time, reverse=True)
+
+          # Write sorted list to JSON
+          with open('files.json', 'w') as f:
+              json.dump(files, f)
+          "
 
       - name: Commit and Push files.json
         run: |
           git config --global user.name "github-actions[bot]"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
           git add matesx/files.json
-          # Only commit if there are changes
-          git diff --quiet && git diff --staged --quiet || (git commit -m "Auto-update matesx files.json [skip ci]" && git push)
+          git diff --quiet && git diff --staged --quiet || (git commit -m "Auto-update matesx files.json (Sorted Newest First) [skip ci]" && git push)
