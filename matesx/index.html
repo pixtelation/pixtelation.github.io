@@ -4,11 +4,17 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Matesx Media Gallery</title>
+
     <style>
         :root {
             --bg-color: #121212;
             --text-color: #e0e0e0;
             --card-bg: #1e1e1e;
+            --gap: 25px;
+        }
+
+        * {
+            box-sizing: border-box;
         }
 
         body {
@@ -17,72 +23,634 @@
             color: var(--text-color);
             margin: 0;
             padding: 40px 20px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
         }
 
-        h1 { margin-top: 0; margin-bottom: 30px; font-weight: 300; }
+        h1 {
+            text-align: center;
+            margin: 0 0 30px;
+            font-weight: 300;
+        }
 
+        /* 
+           Masonry-style responsive gallery.
+           Each media item keeps its ORIGINAL aspect ratio.
+        */
         #gallery {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-            gap: 25px;
+            column-width: 320px;
+            column-gap: var(--gap);
             width: 100%;
             max-width: 1600px;
+            margin: 0 auto;
+        }
+
+        .media-wrapper {
+            width: 100%;
+            margin-bottom: var(--gap);
+            break-inside: avoid;
+            -webkit-column-break-inside: avoid;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+            border-radius: 12px;
+            background-color: var(--card-bg);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
         }
 
         .media-item {
+            display: block;
             width: 100%;
-            height: 350px;
-            object-fit: cover;
+            height: auto;
+            max-width: 100%;
             border-radius: 12px;
-            box-shadow: 0 8px 20px rgba(0,0,0,0.4);
-            background-color: var(--card-bg);
             transition: transform 0.3s ease;
         }
 
-        .media-item:hover { transform: translateY(-5px); }
+        .media-wrapper:hover .media-item {
+            transform: scale(1.03);
+        }
+
+        /* Video indicator */
+        .video-indicator {
+            position: absolute;
+            bottom: 12px;
+            right: 12px;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: rgba(0, 0, 0, 0.7);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            pointer-events: none;
+        }
+
+        .video-indicator::after {
+            content: '';
+            margin-left: 3px;
+            border-left: 11px solid white;
+            border-top: 7px solid transparent;
+            border-bottom: 7px solid transparent;
+        }
+
+        /* =========================
+           MODAL
+        ========================= */
+
+        #mediaModal {
+            display: none;
+            position: fixed;
+            z-index: 9999;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.92);
+            align-items: center;
+            justify-content: center;
+            padding: 30px;
+        }
+
+        #mediaModal.active {
+            display: flex;
+        }
+
+        #modalContent {
+            max-width: 95vw;
+            max-height: 90vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        #modalContent img,
+        #modalContent video {
+            max-width: 95vw;
+            max-height: 90vh;
+            width: auto;
+            height: auto;
+            object-fit: contain;
+            border-radius: 8px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.6);
+        }
+
+        /* Close button */
+        #closeModal {
+            position: fixed;
+            top: 20px;
+            right: 30px;
+            width: 45px;
+            height: 45px;
+            border: none;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.15);
+            color: white;
+            font-size: 30px;
+            line-height: 45px;
+            cursor: pointer;
+            z-index: 10000;
+            transition: background 0.2s ease;
+        }
+
+        #closeModal:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+
+        /* Navigation buttons */
+        .modal-nav {
+            position: fixed;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 50px;
+            height: 50px;
+            border: none;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.15);
+            color: white;
+            font-size: 30px;
+            cursor: pointer;
+            z-index: 10000;
+            transition: background 0.2s ease;
+        }
+
+        .modal-nav:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+
+        #prevMedia {
+            left: 20px;
+        }
+
+        #nextMedia {
+            right: 20px;
+        }
+
+        /* Media counter */
+        #mediaCounter {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            color: white;
+            background: rgba(0, 0, 0, 0.6);
+            padding: 7px 14px;
+            border-radius: 20px;
+            font-size: 14px;
+            z-index: 10000;
+        }
+
+        /* Mobile */
+        @media (max-width: 600px) {
+            body {
+                padding: 25px 12px;
+            }
+
+            #gallery {
+                column-width: 160px;
+                column-gap: 12px;
+            }
+
+            .media-wrapper {
+                margin-bottom: 12px;
+                border-radius: 8px;
+            }
+
+            .media-item {
+                border-radius: 8px;
+            }
+
+            #mediaModal {
+                padding: 10px;
+            }
+
+            #modalContent img,
+            #modalContent video {
+                max-width: 100vw;
+                max-height: 85vh;
+            }
+
+            #closeModal {
+                top: 10px;
+                right: 12px;
+                width: 40px;
+                height: 40px;
+                line-height: 40px;
+                font-size: 26px;
+            }
+
+            .modal-nav {
+                width: 40px;
+                height: 40px;
+                font-size: 24px;
+            }
+
+            #prevMedia {
+                left: 8px;
+            }
+
+            #nextMedia {
+                right: 8px;
+            }
+        }
     </style>
 </head>
+
 <body>
 
     <h1>Matesx Media Gallery</h1>
+
     <div id="gallery"></div>
 
+    <!-- Modal -->
+    <div id="mediaModal">
+
+        <button id="closeModal" aria-label="Close">&times;</button>
+
+        <button
+            id="prevMedia"
+            class="modal-nav"
+            aria-label="Previous media">
+            &#10094;
+        </button>
+
+        <div id="modalContent"></div>
+
+        <button
+            id="nextMedia"
+            class="modal-nav"
+            aria-label="Next media">
+            &#10095;
+        </button>
+
+        <div id="mediaCounter"></div>
+
+    </div>
+
     <script>
-        const imageExtensions = ['jpg', 'jpeg', 'png', 'gif', 'webp', 'svg'];
-        const videoExtensions = ['mp4', 'webm', 'ogg', 'mov'];
+        const imageExtensions = [
+            'jpg',
+            'jpeg',
+            'png',
+            'gif',
+            'webp',
+            'svg',
+            'bmp',
+            'avif'
+        ];
 
-        // Fetches the JSON list generated by GitHub Actions
+        const videoExtensions = [
+            'mp4',
+            'webm',
+            'ogg',
+            'mov',
+            'm4v'
+        ];
+
+        const gallery = document.getElementById('gallery');
+        const mediaModal = document.getElementById('mediaModal');
+        const modalContent = document.getElementById('modalContent');
+        const closeModal = document.getElementById('closeModal');
+        const prevMedia = document.getElementById('prevMedia');
+        const nextMedia = document.getElementById('nextMedia');
+        const mediaCounter = document.getElementById('mediaCounter');
+
+        let mediaFiles = [];
+        let currentIndex = 0;
+
+        /*
+         * Load files.json
+         */
         fetch('files.json')
-            .then(response => response.json())
-            .then(files => {
-                const gallery = document.getElementById('gallery');
-                
-                files.forEach(file => {
-                    const ext = file.split('.').pop().toLowerCase();
-                    const filePath = `media/${file}`;
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error(
+                        `HTTP error! Status: ${response.status}`
+                    );
+                }
 
-                    if (imageExtensions.includes(ext)) {
-                        const img = document.createElement('img');
-                        img.src = filePath;
-                        img.className = 'media-item';
-                        img.loading = 'lazy';
-                        gallery.appendChild(img);
-                    } else if (videoExtensions.includes(ext)) {
-                        const video = document.createElement('video');
-                        video.src = filePath;
-                        video.className = 'media-item';
-                        video.autoplay = true;
-                        video.loop = true;
-                        video.muted = true; 
-                        video.playsInline = true;
-                        gallery.appendChild(video);
-                    }
-                });
+                return response.json();
             })
-            .catch(error => console.error('Error loading files.json:', error));
+            .then(files => {
+
+                mediaFiles = files.filter(file => {
+
+                    const ext = file
+                        .split('.')
+                        .pop()
+                        .toLowerCase();
+
+                    return (
+                        imageExtensions.includes(ext) ||
+                        videoExtensions.includes(ext)
+                    );
+                });
+
+                renderGallery();
+
+            })
+            .catch(error => {
+                console.error(
+                    'Error loading files.json:',
+                    error
+                );
+            });
+
+
+        /*
+         * Render Gallery
+         *
+         * IMPORTANT:
+         * Images/videos are NOT forced into a fixed height.
+         *
+         * Their natural width/height ratio is preserved,
+         * so portrait, landscape and square media all
+         * display according to their actual dimensions.
+         */
+        function renderGallery() {
+
+            gallery.innerHTML = '';
+
+            mediaFiles.forEach((file, index) => {
+
+                const ext = file
+                    .split('.')
+                    .pop()
+                    .toLowerCase();
+
+                const filePath =
+                    'media/' +
+                    encodeURIComponent(file);
+
+                const wrapper =
+                    document.createElement('div');
+
+                wrapper.className = 'media-wrapper';
+
+                wrapper.dataset.index = index;
+
+                if (imageExtensions.includes(ext)) {
+
+                    const img =
+                        document.createElement('img');
+
+                    img.src = filePath;
+                    img.className = 'media-item';
+                    img.loading = 'lazy';
+                    img.alt = file;
+
+                    wrapper.appendChild(img);
+
+                } else if (videoExtensions.includes(ext)) {
+
+                    const video =
+                        document.createElement('video');
+
+                    video.src = filePath;
+                    video.className = 'media-item';
+
+                    /*
+                     * Preview video in gallery
+                     */
+                    video.autoplay = true;
+                    video.loop = true;
+                    video.muted = true;
+                    video.playsInline = true;
+                    video.preload = 'metadata';
+
+                    const indicator =
+                        document.createElement('div');
+
+                    indicator.className =
+                        'video-indicator';
+
+                    wrapper.appendChild(video);
+                    wrapper.appendChild(indicator);
+                }
+
+                /*
+                 * Open modal when clicked
+                 */
+                wrapper.addEventListener(
+                    'click',
+                    () => openModal(index)
+                );
+
+                gallery.appendChild(wrapper);
+            });
+        }
+
+
+        /*
+         * Open Modal
+         */
+        function openModal(index) {
+
+            if (
+                index < 0 ||
+                index >= mediaFiles.length
+            ) {
+                return;
+            }
+
+            currentIndex = index;
+
+            const file = mediaFiles[index];
+
+            const ext = file
+                .split('.')
+                .pop()
+                .toLowerCase();
+
+            const filePath =
+                'media/' +
+                encodeURIComponent(file);
+
+            modalContent.innerHTML = '';
+
+            if (imageExtensions.includes(ext)) {
+
+                const img =
+                    document.createElement('img');
+
+                img.src = filePath;
+                img.alt = file;
+
+                modalContent.appendChild(img);
+
+            } else if (videoExtensions.includes(ext)) {
+
+                const video =
+                    document.createElement('video');
+
+                video.src = filePath;
+
+                /*
+                 * Video automatically starts
+                 * when opened in modal.
+                 */
+                video.autoplay = true;
+                video.controls = true;
+                video.playsInline = true;
+                video.muted = false;
+                video.preload = 'auto';
+
+                modalContent.appendChild(video);
+
+                /*
+                 * Attempt autoplay with sound.
+                 * If browser blocks it, muted playback
+                 * will still start.
+                 */
+                const playPromise = video.play();
+
+                if (playPromise !== undefined) {
+
+                    playPromise.catch(() => {
+
+                        video.muted = true;
+
+                        video.play().catch(() => {});
+
+                    });
+                }
+            }
+
+            mediaCounter.textContent =
+                `${currentIndex + 1} / ${mediaFiles.length}`;
+
+            mediaModal.classList.add('active');
+
+            document.body.style.overflow = 'hidden';
+        }
+
+
+        /*
+         * Close Modal
+         */
+        function closeMediaModal() {
+
+            const video =
+                modalContent.querySelector('video');
+
+            if (video) {
+                video.pause();
+                video.currentTime = 0;
+            }
+
+            modalContent.innerHTML = '';
+
+            mediaModal.classList.remove('active');
+
+            document.body.style.overflow = '';
+        }
+
+
+        /*
+         * Previous Media
+         */
+        function showPrevious() {
+
+            if (mediaFiles.length === 0) {
+                return;
+            }
+
+            currentIndex =
+                (currentIndex - 1 + mediaFiles.length)
+                % mediaFiles.length;
+
+            openModal(currentIndex);
+        }
+
+
+        /*
+         * Next Media
+         */
+        function showNext() {
+
+            if (mediaFiles.length === 0) {
+                return;
+            }
+
+            currentIndex =
+                (currentIndex + 1)
+                % mediaFiles.length;
+
+            openModal(currentIndex);
+        }
+
+
+        /*
+         * Close button
+         */
+        closeModal.addEventListener(
+            'click',
+            closeMediaModal
+        );
+
+
+        /*
+         * Previous / Next
+         */
+        prevMedia.addEventListener(
+            'click',
+            event => {
+                event.stopPropagation();
+                showPrevious();
+            }
+        );
+
+        nextMedia.addEventListener(
+            'click',
+            event => {
+                event.stopPropagation();
+                showNext();
+            }
+        );
+
+
+        /*
+         * Click outside media to close
+         */
+        mediaModal.addEventListener(
+            'click',
+            event => {
+
+                if (
+                    event.target === mediaModal
+                ) {
+                    closeMediaModal();
+                }
+            }
+        );
+
+
+        /*
+         * Keyboard controls
+         */
+        document.addEventListener(
+            'keydown',
+            event => {
+
+                if (
+                    !mediaModal.classList.contains(
+                        'active'
+                    )
+                ) {
+                    return;
+                }
+
+                if (event.key === 'Escape') {
+                    closeMediaModal();
+                }
+
+                if (event.key === 'ArrowLeft') {
+                    showPrevious();
+                }
+
+                if (event.key === 'ArrowRight') {
+                    showNext();
+                }
+            }
+        );
     </script>
+
 </body>
 </html>
